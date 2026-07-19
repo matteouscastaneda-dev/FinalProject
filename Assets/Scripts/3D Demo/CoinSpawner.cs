@@ -31,7 +31,10 @@ public class CoinSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (hasWon) return;
+        if (hasWon)
+        {
+            return;
+        }
 
         if (Time.time >= nextSpawnTime)
         {

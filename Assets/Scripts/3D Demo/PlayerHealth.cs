@@ -3,10 +3,8 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] private int maxHealth = 5;
-    [SerializeField] private float invulnerabilityDuration = 1f;
 
     private int currentHealth;
-    private float invulnerabilityTimer;
 
     public int CurrentHealth { get { return currentHealth; } }
     public int MaxHealth { get { return maxHealth; } }
@@ -28,7 +26,10 @@ public class PlayerHealth : MonoBehaviour
     /// </summary>
     public void TakeDamage(int amount)
     {
-        if (amount <= 0) return;
+        if (amount <= 0)
+        {
+            return;
+        }
         currentHealth -= amount;
 
         Debug.Log("Player HP: " + currentHealth + " / " + maxHealth);

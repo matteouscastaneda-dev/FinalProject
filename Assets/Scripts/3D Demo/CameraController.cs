@@ -45,7 +45,10 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (target == null) return;
+        if (target == null)
+        {
+            return;
+        }
 
         yaw += lookInput.x * sensitivity;
         pitch -= lookInput.y * sensitivity;
