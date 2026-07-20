@@ -1,6 +1,9 @@
+
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,8 +15,7 @@ public class GameManager : MonoBehaviour
     [Header("Attendance")]
     [SerializeField] private int startingAttendance = 12;
 
-    [Header("Grades")]
-    [Tooltip("Best to least grade")]
+    [Header("Evaluation Tiers")]
     [SerializeField] private EvaluationTierEntry[] tierEntries;
 
     private AttendanceManager attendance;
@@ -81,16 +83,20 @@ public class GameManager : MonoBehaviour
     public EvaluationTier EvaluateFinalScore()
     {
         int count = attendance.ActiveCount;
+        EvaluationTier bestTier = EvaluationTier.Failed;
+        int bestThreshold = -1;
 
-        for (int i = 0; i < tierEntries.Length; i++)
+        foreach (KeyValuePair<EvaluationTier, EvaluationTierEntry> pair in tierLookup)
         {
-            if (count >= tierEntries[i].minAttendance)
+            EvaluationTierEntry entry = pair.Value;
+            if (count >= entry.minAttendance && entry.minAttendance > bestThreshold)
             {
-                return tierEntries[i].tier;
+                bestTier = pair.Key;
+                bestThreshold = entry.minAttendance;
             }
         }
 
-        return EvaluationTier.Failed;
+        return bestTier;
     }
 
     /// <summary>
@@ -102,13 +108,39 @@ public class GameManager : MonoBehaviour
         {
             return tier.ToString();
         }
-
         return tierLookup[tier].message;
+    }
+
+    /// <summary>
+    /// Starts scene load with the loading screen
+    /// </summary>
+    public void LoadScene(string sceneName)
+    {
+        StartCoroutine(LoadSceneRoutine(sceneName));
+    }
+
+    /// <summary>
+    /// Shows the loading overlay 
+    /// Waits for scene load
+    /// then hides the overlay
+    /// </summary>
+    private IEnumerator LoadSceneRoutine(string sceneName)
+    {
+        UIManager.Instance.ShowLoadingScreen();
+
+        AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
+        while (!op.isDone)
+        {
+            yield return null;
+        }
+
+        UIManager.Instance.HideLoadingScreen();
     }
 }
 
 /// <summary>
 /// Inspector data for one evaluation tier
+/// </summary>
 [System.Serializable]
 public class EvaluationTierEntry
 {
