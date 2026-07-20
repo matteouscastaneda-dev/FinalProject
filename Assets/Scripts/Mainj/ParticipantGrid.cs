@@ -41,12 +41,12 @@ public class ParticipantGrid : MonoBehaviour
             ParticipantTile tile = tiles[i];
             if (i < students.Count)
             {
-                tile.SetActive(true);
+                tile.gameObject.SetActive(true);
                 tile.SetName(students[i].studentName);
             }
             else
             {
-                tile.SetActive(false);
+                tile.gameObject.SetActive(false);
             }
         }
     }
