@@ -6,7 +6,7 @@ public class AttendanceManager
 
     public int ActiveCount { get { return activeStudents.Count; } }
     public bool IsEmpty { get { return activeStudents.Count == 0; } }
-    public IReadOnlyList<Student> ActiveStudents { get { return activeStudents; } }
+    public List<Student> ActiveStudents { get { return activeStudents; } }
 
     /// <summary>
     /// Populates the class

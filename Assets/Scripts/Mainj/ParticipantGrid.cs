@@ -34,7 +34,7 @@ public class ParticipantGrid : MonoBehaviour
     private void RefreshGrid()
     {
         AttendanceManager attendance = GameManager.Instance.Attendance;
-        IReadOnlyList<Student> students = attendance.ActiveStudents;
+        List<Student> students = attendance.ActiveStudents;
 
         for (int i = 0; i < tiles.Count; i++)
         {

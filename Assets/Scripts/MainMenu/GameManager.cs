@@ -42,7 +42,10 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        OnAttendanceChanged?.Invoke(attendance.ActiveCount);
+        if (OnAttendanceChanged != null)
+        {
+            OnAttendanceChanged.Invoke(attendance.ActiveCount);
+        }
     }
 
     /// <summary>
@@ -73,8 +76,14 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        OnStudentLeft?.Invoke(leaving);
-        OnAttendanceChanged?.Invoke(attendance.ActiveCount);
+        if (OnStudentLeft != null)
+        {
+            OnStudentLeft.Invoke(leaving);
+        }
+        if (OnAttendanceChanged != null)
+        {
+            OnAttendanceChanged.Invoke(attendance.ActiveCount);
+        }
     }
 
     /// <summary>
@@ -82,22 +91,21 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public EvaluationTier EvaluateFinalScore()
     {
-        int count = attendance.ActiveCount;
-        EvaluationTier bestTier = EvaluationTier.Failed;
-        int bestThreshold = -1;
+    int count = attendance.ActiveCount;
+    EvaluationTier bestTier = EvaluationTier.Failed;
+    int bestThreshold = -1;
 
-        foreach (KeyValuePair<EvaluationTier, EvaluationTierEntry> pair in tierLookup)
+    foreach (var pair in tierLookup)
+    {
+        EvaluationTierEntry entry = pair.Value;
+        if (count >= entry.minAttendance && entry.minAttendance > bestThreshold)
         {
-            EvaluationTierEntry entry = pair.Value;
-            if (count >= entry.minAttendance && entry.minAttendance > bestThreshold)
-            {
-                bestTier = pair.Key;
-                bestThreshold = entry.minAttendance;
-            }
+            bestTier = pair.Key;
+            bestThreshold = entry.minAttendance;
         }
-
-        return bestTier;
     }
+    return bestTier;
+}
 
     /// <summary>
     /// Returns the display message for a given evaluation tier
